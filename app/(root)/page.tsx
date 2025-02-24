@@ -1,6 +1,7 @@
 import SearchForm from "@/components/SearchForm";
-import StartupCard from "@/components/StartupCard";
-import { formatDate } from "@/lib/utils";
+import StartupCard, { StartupCardType } from "@/components/StartupCard";
+import { sanityFetch, SanityLive } from "@/lib/live";
+import { STARTUPS_QUERY } from "@/sanity/lib/query";
 
 interface IHomepageParams {
   searchParams: Promise<{ query?: string }>;
@@ -8,20 +9,9 @@ interface IHomepageParams {
 
 export default async function Home({ searchParams }: IHomepageParams) {
   const { query } = await searchParams;
+  const params = { search: query || null };
 
-  const posts = [
-    {
-      _createdAt: formatDate(new Date()),
-      views: 55,
-      author: { _id: 1, name: "Alex Wazowsky" },
-      _id: 1,
-      description: "Elon Musk's new Robots company",
-      category: "Robots",
-      title: "We Robots",
-      image:
-        "https://pub-49dfeb8e513f4009ba56b124403c8cb0.r2.dev/wall-e.png",
-    },
-  ];
+  const { data: posts } = await sanityFetch({ query: STARTUPS_QUERY, params });
   return (
     <>
       <section className="pink_container">
@@ -31,7 +21,7 @@ export default async function Home({ searchParams }: IHomepageParams) {
           Connect With Entrepreneurs
         </h1>
         <p className="sub-heading !max-w-3xl">
-          Submit Ideas, Vot on Pitches, and Get Noticed in Virtual Competitions.
+          Submit Ideas, Vote on Pitches, and Get Noticed in Virtual Competitions.
         </p>
         <SearchForm query={query} />
       </section>
@@ -41,7 +31,7 @@ export default async function Home({ searchParams }: IHomepageParams) {
         </p>
         <ul className="mt-7 card_grid">
           {posts.length > 0 ? (
-            posts.map((post: any) => {
+            posts.map((post: StartupCardType) => {
               return <StartupCard post={post} key={post._id} />;
             })
           ) : (
@@ -49,6 +39,8 @@ export default async function Home({ searchParams }: IHomepageParams) {
           )}
         </ul>
       </section>
+
+      <SanityLive />
     </>
   );
 }
