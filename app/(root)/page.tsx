@@ -1,7 +1,7 @@
 import SearchForm from "@/components/SearchForm";
 import StartupCard, { StartupCardType } from "@/components/StartupCard";
 import { sanityFetch, SanityLive } from "@/lib/live";
-import { STARTUPS_QUERY } from "@/sanity/lib/query";
+import { STARTUPS_QUERY } from "@/sanity/lib/queries";
 
 interface IHomepageParams {
   searchParams: Promise<{ query?: string }>;
