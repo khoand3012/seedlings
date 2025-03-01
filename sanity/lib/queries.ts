@@ -44,3 +44,15 @@ export const STARTUP_VIEW_QUERY = defineQuery(`
     views,
   }  
 `)
+
+export const AUTHOR_BY_EMAIL_QUERY = defineQuery(`
+  *[_type == "author" && email == $email][0] {
+    _id,
+    id,
+    name,
+    username,
+    email,
+    image,
+    bio
+  }
+`)

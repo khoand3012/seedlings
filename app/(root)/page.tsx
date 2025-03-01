@@ -1,3 +1,4 @@
+// import { auth } from "@/auth";
 import SearchForm from "@/components/SearchForm";
 import StartupCard, { StartupCardType } from "@/components/StartupCard";
 import { sanityFetch, SanityLive } from "@/lib/live";
@@ -11,6 +12,9 @@ export default async function Home({ searchParams }: IHomepageParams) {
   const { query } = await searchParams;
   const params = { search: query || null };
 
+  // const session = await auth();
+  // if (session) console.log("Session ID", session.id);
+
   const { data: posts } = await sanityFetch({ query: STARTUPS_QUERY, params });
   return (
     <>
@@ -21,7 +25,8 @@ export default async function Home({ searchParams }: IHomepageParams) {
           Connect With Entrepreneurs
         </h1>
         <p className="sub-heading !max-w-3xl">
-          Submit Ideas, Vote on Pitches, and Get Noticed in Virtual Competitions.
+          Submit Ideas, Vote on Pitches, and Get Noticed in Virtual
+          Competitions.
         </p>
         <SearchForm query={query} />
       </section>

@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
     ppr: "incremental",
   },
   devIndicators: {
-    buildActivityPosition: "bottom-right"
+    position: "bottom-left",
   }
 };
 

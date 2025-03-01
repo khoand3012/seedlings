@@ -1,4 +1,3 @@
-import { sanityFetch } from "@/lib/live";
 import { formatDate } from "@/lib/utils";
 import { STARTUP_BY_ID_QUERY } from "@/sanity/lib/queries";
 import Image from "next/image";
@@ -8,6 +7,7 @@ import React, { Suspense } from "react";
 import markdownit from "markdown-it";
 import { Skeleton } from "@/components/ui/skeleton";
 import View from "@/components/View";
+import { client } from "@/sanity/lib/client";
 
 interface IStartupPageProps {
   params: Promise<{ id: string }>;
@@ -19,10 +19,7 @@ export const revalidate = 60;
 export default async function StartupPage({ params }: IStartupPageProps) {
   const { id } = await params;
 
-  const { data: post } = await sanityFetch({
-    query: STARTUP_BY_ID_QUERY,
-    params: { id },
-  });
+  const post = await client.fetch(STARTUP_BY_ID_QUERY, { id });
 
   if (!post) return notFound();
 
