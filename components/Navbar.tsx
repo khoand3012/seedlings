@@ -4,16 +4,34 @@ import { auth, signOut, signIn } from "@/auth";
 
 export default async function Navbar() {
   const session = await auth();
+  const providers = [
+    { name: "github", alt: "Github logo" },
+    { name: "google", alt: "Google logo" },
+    { name: "facebook", alt: "Facebook logo" },
+  ];
+
+  const handleSignIn = async (formData: FormData) => {
+    "use server";
+    const provider = formData.get("provider") as string;
+    await signIn(provider);
+  };
+
+  const handleSignOut = async () => {
+    "use server";
+    await signOut();
+  };
+
   return (
     <header className="px-5 py-3 bg-white shadow-sm font-work-sans">
       <nav className="flex justify-between items-center">
-        <Link href="/">
+        <Link href="/" className="flex items-center gap-5">
           <Image
             src={"/logo.png"}
             alt="site-logo"
-            height={30}
-            width={30}
+            height={32}
+            width={32}
           ></Image>
+          <span className="font-work-sans text-xl font-bold">Seedlings</span>
         </Link>
 
         <div className="flex items-center gap-5 text-black">
@@ -22,12 +40,7 @@ export default async function Navbar() {
               <Link href={"/startup/create"}>
                 <span>Create</span>
               </Link>
-              <form
-                action={async () => {
-                  "use server";
-                  await signOut();
-                }}
-              >
+              <form action={handleSignOut}>
                 <button type="submit">
                   <span>Logout</span>
                 </button>
@@ -39,51 +52,28 @@ export default async function Navbar() {
           ) : (
             <>
               <div className="flex items-center gap-[16px]">
-                <span className="text-bold">Sign in:</span>
+                <span className="text-bold">Sign in with:</span>
                 <form
-                  action={async () => {
-                    "use server";
-                    await signIn("github");
-                  }}
+                  action={handleSignIn}
+                  className="flex items-center gap-[12px]"
                 >
-                  <button type="submit">
-                    <Image
-                      src="/github.png"
-                      alt="github logo"
-                      height={32}
-                      width={32}
-                    />
-                  </button>
-                </form>
-                <form
-                  action={async () => {
-                    "use server";
-                    await signIn("google");
-                  }}
-                >
-                  <button type="submit">
-                    <Image
-                      src="/google.png"
-                      alt="google logo"
-                      height={32}
-                      width={32}
-                    />
-                  </button>
-                </form>
-                <form
-                  action={async () => {
-                    "use server";
-                    await signIn("facebook");
-                  }}
-                >
-                  <button type="submit">
-                    <Image
-                      src="/facebook.png"
-                      alt="facebook logo"
-                      height={32}
-                      width={32}
-                    />
-                  </button>
+                  {providers.map(({ alt, name }) => {
+                    return (
+                      <button
+                        key={name}
+                        type="submit"
+                        value={name}
+                        name="provider"
+                      >
+                        <Image
+                          src={`/${name}.png`}
+                          alt={alt}
+                          height={32}
+                          width={32}
+                        />
+                      </button>
+                    );
+                  })}
                 </form>
               </div>
             </>

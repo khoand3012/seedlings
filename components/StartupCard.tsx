@@ -27,7 +27,7 @@ export default function StartupCard({ post }: IStartupCardProps) {
       <div className="flex-between">
         <p className="startup_card_date">{formatDate(new Date(_createdAt))}</p>
         <div className="flex gap-1.5">
-          <EyeIcon className="size-6 text-primary" />
+          <EyeIcon className="size-6 text-lime-700" />
           <span className="text-16-medium">{views}</span>
         </div>
       </div>

@@ -1,4 +1,4 @@
-// import { auth } from "@/auth";
+import { auth } from "@/auth";
 import SearchForm from "@/components/SearchForm";
 import StartupCard, { StartupCardType } from "@/components/StartupCard";
 import { sanityFetch, SanityLive } from "@/lib/live";
@@ -12,13 +12,13 @@ export default async function Home({ searchParams }: IHomepageParams) {
   const { query } = await searchParams;
   const params = { search: query || null };
 
-  // const session = await auth();
-  // if (session) console.log("Session ID", session.id);
+  const session = await auth();
+  if (session) console.log("Session ID", (session as any).id);
 
   const { data: posts } = await sanityFetch({ query: STARTUPS_QUERY, params });
   return (
     <>
-      <section className="pink_container">
+      <section className="lime_container">
         <h1 className="heading">
           Pitch Your Startup,
           <br />
