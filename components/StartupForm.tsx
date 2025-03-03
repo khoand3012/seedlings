@@ -10,24 +10,41 @@ import { Send } from "lucide-react";
 import { formSchema } from "@/lib/validation";
 import { z } from "zod";
 import { toast } from "sonner";
-import Router from "next/router";
-import { createStartup } from "@/actions";
+import { useRouter } from "next/navigation";
+import { createStartup } from "@/sanity/lib/actions";
 
 export default function StartupForm() {
-  const handleSubmit = (prevState: any, formData: FormData) => {
+  const router = useRouter();
+
+  const [errors, setErrors] = useState<Record<string, string>>({
+    title: "",
+    description: "",
+  });
+  const [pitch, setPitch] = useState("");
+
+  const handleChangePitch = useCallback((value?: string) => {
+    setPitch(value || "");
+  }, []);
+
+  const handleSubmit = async (prevState: any, formData: FormData) => {
     try {
       const formValues = {
         title: formData.get("title") as string,
         description: formData.get("description") as string,
         category: formData.get("category") as string,
-        link: formData.get("link") as string,
+        image: formData.get("image") as string,
         pitch,
       };
 
       formSchema.parse(formValues);
-      return createStartup(formValues).then((startup) => {
-        Router.push(`/startup/${startup._id}`);
-      });
+      const result = await createStartup(formValues);
+      console.log("🚀 ~ handleSubmit ~ result:", result);
+      if (result.status === "SUCCESS") {
+        toast("Success", {
+          description: "Your startup pitch has been created successfully.",
+        });
+        router.push(`/startup/${result._id}`);
+      }
     } catch (error) {
       console.log("🚀 ~ handleSubmit ~ error:", error);
       if (error instanceof z.ZodError) {
@@ -49,24 +66,10 @@ export default function StartupForm() {
     }
   };
 
-  const createIdea = (prevState: any, formData: FormData, pitch: string) => {
-    throw new Error("Function not implemented.");
-  };
-
-  const [errors, setErrors] = useState<Record<string, string>>({
-    title: "",
-    description: "",
-  });
-  const [pitch, setPitch] = useState("");
   const [state, formAction, isPending] = useActionState(handleSubmit, {
     error: "",
     status: "INITIAL",
   });
-  //   const isPending = false;
-
-  const handleChangePitch = useCallback((value?: string) => {
-    setPitch(value || "");
-  }, []);
 
   return (
     <>
@@ -114,17 +117,17 @@ export default function StartupForm() {
           )}
         </div>
         <div>
-          <label htmlFor="link" className="startup-form_label">
+          <label htmlFor="image" className="startup-form_label">
             Image URL
           </label>
           <Input
-            id="link"
-            name="link"
+            id="image"
+            name="image"
             className="startup-form_input"
             required
             placeholder="Startup Image URL"
           />
-          {errors.link && <p className="startup-form_error">{errors.link}</p>}
+          {errors.image && <p className="startup-form_error">{errors.image}</p>}
         </div>
         <div data-color-mode="light">
           <label htmlFor="pitch" className="startup-form_label">
@@ -136,7 +139,7 @@ export default function StartupForm() {
             id="pitch"
             preview="edit"
             height={300}
-            className="!rounded-[20px] overflow-hidden"
+            className="!rounded-[20px] overflow-hidden border-[3px] border-solid border-black"
             textareaProps={{
               placeholder:
                 "Briefly describe your idea. What problem does it solve?",

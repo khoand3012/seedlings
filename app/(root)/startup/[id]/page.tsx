@@ -50,13 +50,15 @@ export default async function StartupPage({ params }: IStartupPageProps) {
                 alt="avatar"
                 height={64}
                 width={64}
-                className="rounded-full drop-shadow-lg object-cover max-h-[64px]"
+                className="rounded-full drop-shadow-lg object-contain max-h-[64px]"
               />
               <div>
                 <p className="text-20-medium">{post.author.name}</p>
-                <p className="text-16-medium !text-black-300">
-                  @{post.author.username}
-                </p>
+                {post.author.username && (
+                  <p className="text-16-medium !text-black-300">
+                    @{post.author.username}
+                  </p>
+                )}
               </div>
             </Link>
             <p className="category-tag">{post.category}</p>
