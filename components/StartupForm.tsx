@@ -38,7 +38,6 @@ export default function StartupForm() {
 
       formSchema.parse(formValues);
       const result = await createStartup(formValues);
-      console.log("🚀 ~ handleSubmit ~ result:", result);
       if (result.status === "SUCCESS") {
         toast("Success", {
           description: "Your startup pitch has been created successfully.",
@@ -46,7 +45,6 @@ export default function StartupForm() {
         router.push(`/startup/${result._id}`);
       }
     } catch (error) {
-      console.log("🚀 ~ handleSubmit ~ error:", error);
       if (error instanceof z.ZodError) {
         const fieldErrors = error.flatten().fieldErrors;
         setErrors(fieldErrors as any);

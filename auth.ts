@@ -5,6 +5,7 @@ import Facebook from "next-auth/providers/facebook";
 import { client } from "./sanity/lib/client";
 import { AUTHOR_BY_EMAIL_QUERY } from "./sanity/lib/queries";
 import { writeClient } from "./sanity/lib/writeClient";
+import { slugify } from "./lib/utils";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
@@ -34,7 +35,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           _type: "author",
           id: profile?.id,
           name: name,
-          username: profile?.login,
+          username: profile?.login || slugify(name || ""),
           email,
           image,
           bio: profile?.bio || "",

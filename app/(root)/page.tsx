@@ -11,10 +11,6 @@ interface IHomepageParams {
 export default async function Home({ searchParams }: IHomepageParams) {
   const { query } = await searchParams;
   const params = { search: query || null };
-
-  const session = await auth();
-  if (session) console.log("Session ID", (session as any).id);
-
   const { data: posts } = await sanityFetch({ query: STARTUPS_QUERY, params });
   return (
     <>

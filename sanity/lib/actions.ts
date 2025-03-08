@@ -34,7 +34,6 @@ export async function createStartup(props: Omit<Startup, OmitStartup>) {
       },
       views: 0,
     });
-    console.log("🚀 ~ createStartup ~ result:", result)
     return parseServerActionResponse({
       ...result,
       error: "",
